@@ -28,18 +28,36 @@ public class FacebookFriendsMapper extends Mapper<LongWritable, Text, FriendPair
 		
 		Logger log = Logger.getLogger(FacebookFriendsMapper.class);
 		
-		StringTokenizer st = new StringTokenizer(value.toString(), "\t");
-		String person = st.nextToken();
-		String friends = st.nextToken();
+		// the text is made with {"person"}\t[{person},{person}], where \t is tab
+		StringTokenizer st = new StringTokenizer(value.toString(), "\t"); // this split for \t
+		String person = st.nextToken(); // the first token is the person
+		String friends = st.nextToken(); // then the list of friends
 		
+		// populate a Friend object using the first token
 		Friend f1 = populateFriend(person);
+		
+		// after we have to populate the list of friends of a person
 		List<Friend> friendList = populateFriendList(friends);
+		
+		// after create the list of friends, convert it to an array
 		Friend[] friendArray = Arrays.copyOf(friendList.toArray(), friendList.toArray().length, Friend[].class);
+		
+		// after convert the list into an array, we can init a FriendArray object
 		FriendArray farray = new FriendArray(Friend.class, friendArray);
 		
+		// the iterate through the list of friends
 		for(Friend f2 : friendList) {
+			// make a couple person-friend
+			// taken from the list of friends
 			FriendPair fpair = new FriendPair(f1, f2);
 			context.write(fpair, farray);
+			
+			// remember that this command send the <key,value> pair
+			// to Hadoop; the shuffle will get all the outputs and 
+			// compare them by key: the key is a FriendPair, in which
+			// we have overwrite the compareTo method, in order to have
+			// true when we have ("a","b") and ("b","a"), in order to aggregate
+			// the keys without considering the order of the two elements
 			log.info(fpair+"......"+ farray);
 		}
 
@@ -53,13 +71,19 @@ public class FacebookFriendsMapper extends Mapper<LongWritable, Text, FriendPair
 		Friend friend = null;
 		try {
 			
+			// parse the json string and map it to an object
 			Object obj = (Object)parser.parse(friendJson);
+			// then cast the object to a JSONObject
 			JSONObject jsonObject = (JSONObject) obj;
 
+			// once we have the JSONObject, we can get the
+			// properties of the json
 			Long lid = (long)jsonObject.get("id");
 			IntWritable id = new IntWritable(lid.intValue());
 			Text name = new Text((String)jsonObject.get("name"));
 			Text hometown = new Text((String)jsonObject.get("hometown"));
+			
+			// and we can use them to init a new Friend object
 			friend = new Friend(id, name, hometown);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -73,17 +97,29 @@ public class FacebookFriendsMapper extends Mapper<LongWritable, Text, FriendPair
 		List<Friend> friendList = new ArrayList<Friend>();
 		
 		try {
+			// the first part is the same of population
+			// of Friend object
 			JSONParser parser = new JSONParser();
 			Object obj = (Object)parser.parse(friendsJson.toString());
+			
+			// this time we are not casting to a JSONObject
+			// but to a JSONArray
 			JSONArray jsonarray = (JSONArray) obj;
 
+			// then we iterate through the array
 			for(Object jobj : jsonarray) {
+				// cast the iterator to a JSONObjec
 				JSONObject entry = (JSONObject)jobj;
+				
+				// and made the same things done for 
+				// populating the Friend object
 				Long lid = (long)entry.get("id");
 				IntWritable id = new IntWritable(lid.intValue());
 				Text name = new Text((String)entry.get("name"));
 				Text hometown = new Text((String)entry.get("hometown"));
 				Friend friend = new Friend(id, name, hometown);
+				
+				// at the end we add the Friend to the return list
 				friendList.add(friend);
 			}
 		} catch (ParseException e) {

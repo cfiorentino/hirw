@@ -37,6 +37,8 @@ public class FacebookFriendsDriver extends Configured implements Tool {
 		FileOutputFormat.setOutputPath(fb, new Path(args[1]));
 		
 		fb.setInputFormatClass(TextInputFormat.class);
+		// The SequenceFileOutpuFormat is used to store
+		// data in a binary format
 		fb.setOutputFormatClass(SequenceFileOutputFormat.class);
 
 		//Mapper-Reducer-Combiner specifications

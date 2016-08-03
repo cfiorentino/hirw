@@ -7,7 +7,8 @@ import java.io.IOException;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
-
+							   // this make the class
+							   // Writable
 public class Friend implements WritableComparable {
 	
 	private IntWritable id;
