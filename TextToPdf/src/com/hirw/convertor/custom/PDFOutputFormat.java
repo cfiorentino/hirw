@@ -19,9 +19,15 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import com.lowagie.text.Document;
 import com.lowagie.text.pdf.PdfCopy;
 
+// as we have implemented a FileInputFormat
+// we have to implement a FileOutputFormat;
+// we call it PDFOutputFormat
 public class PDFOutputFormat extends FileOutputFormat<Text, PDFWritable> {
 	TaskAttemptContext job;
 
+	// the implementation of the method will
+	// return a custom class of type PDFRecordWriter
+	// (remember for the reader was PDFRecordReader)
 	@Override
 	public RecordWriter<Text, PDFWritable> getRecordWriter(TaskAttemptContext job) throws IOException, InterruptedException {
 		this.job = job;
@@ -50,6 +56,9 @@ public class PDFOutputFormat extends FileOutputFormat<Text, PDFWritable> {
 		//Write the PDFWritable to a file in HDFS
 		@Override
 		public synchronized void write(Text key, PDFWritable value) throws IOException, InterruptedException {
+			// the function read the <key,value> pair created
+			// by the mapper
+			
 			Configuration conf = job.getConfiguration();
 			Path name = getDefaultWorkFile(job, null);
 			String outfilepath = name.toString();

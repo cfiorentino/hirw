@@ -18,6 +18,10 @@ import com.lowagie.text.Paragraph;
 import com.lowagie.text.pdf.PdfReader;
 import com.lowagie.text.pdf.PdfWriter;
 
+// remember that the main goal of a
+// Writable object is to serialize
+// an object in an efficient and simple manner
+// in order to transmit trough the nodes
 public class PDFWritable implements Writable {
 
 	private static final Log log = LogFactory.getLog(PDFWritable.class);
@@ -35,14 +39,20 @@ public class PDFWritable implements Writable {
 	}
 
 
+	// this method read what the "write" method
+	// write to the stream
+	
 	//Read PDFWritable from stream
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		
+		// we read the bytes of the "in" input
 		int newlength = WritableUtils.readVInt(in);
 		bytes = new byte[newlength];
 		in.readFully(bytes, 0, newlength);
 		
+		// then we use them to initialize
+		// a pdf reader
 		try{
 			reader = new PdfReader(bytes);
 		}
@@ -58,6 +68,9 @@ public class PDFWritable implements Writable {
 	Document document = new Document(PageSize.LETTER, 40, 40, 40, 40);
 
 	try{
+		// we are simply creating (by using an external library)
+		// a pdf document, filling the content with the input
+		// from the stream
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		PdfWriter.getInstance(document, output);
 		document.open();
@@ -67,6 +80,9 @@ public class PDFWritable implements Writable {
 		
         document.close();
 		WritableUtils.writeVInt(out, output.size());
+		
+		// with this command we are writing the document
+		// to the stream
 		out.write(output.toByteArray(), 0, output.size());
 		
 	}

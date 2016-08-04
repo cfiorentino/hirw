@@ -16,10 +16,15 @@ public class PDFMapper extends Mapper<Text, PDFWritable, Text, PDFWritable>{
 	String dirName = null;
 	String fileName = null;
 
+	// the mapper in this case is really simple:
+	// we have already (in PDFWritable class) read the
+	// stream and get the pdf file
+	
 	@Override
 	public void map(Text key, PDFWritable value, Context context) 
 			throws IOException, InterruptedException {
 		try{
+			// so we only need to emit the <key,value>
 			context.write(key, value);
 		}
 		catch(Exception e){

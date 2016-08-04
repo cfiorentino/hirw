@@ -1,5 +1,5 @@
-C:\Hadoop\workspace-course\TextToPdf\src\com\hirw\convertor\custom\PDFOutputFormat.java
-C:\Hadoop\workspace-course\TextToPdf\src\com\hirw\convertor\mr\PDFMapper.java
-C:\Hadoop\workspace-course\TextToPdf\src\com\hirw\convertor\mr\TextToPdf.java
-C:\Hadoop\workspace-course\TextToPdf\src\com\hirw\convertor\custom\PDFWritable.java
-C:\Hadoop\workspace-course\TextToPdf\src\com\hirw\convertor\custom\PDFInputFormat.java
+/home/cfiorentino/hirw/TextToPdf/src/com/hirw/convertor/custom/PDFInputFormat.java
+/home/cfiorentino/hirw/TextToPdf/src/com/hirw/convertor/mr/TextToPdf.java
+/home/cfiorentino/hirw/TextToPdf/src/com/hirw/convertor/custom/PDFWritable.java
+/home/cfiorentino/hirw/TextToPdf/src/com/hirw/convertor/mr/PDFMapper.java
+/home/cfiorentino/hirw/TextToPdf/src/com/hirw/convertor/custom/PDFOutputFormat.java
